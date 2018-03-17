@@ -59,11 +59,14 @@ class MightyToaster extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.hasAttribute('text')) {
-       const text = this.attributes.getNamedItem('text').value;
-       this.toast.innerHTML = text;
+    if (!this.hasAttribute('text')) {
+      console.error('please supply a text attribute with proper message');
+      return;
     }
 
+    const text = this.attributes.getNamedItem('text').value.trim();
+    const message = text.length > 0 ? text : 'Default Text!'
+    this.toast.innerHTML = message;
     this.toast.className = "show";
     setTimeout(() => { this.toast.className = this.toast.className.replace("show", ""); }, 3000);
   }
