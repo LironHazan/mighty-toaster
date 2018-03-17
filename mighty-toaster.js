@@ -6,7 +6,6 @@ class MightyToaster extends HTMLElement {
   constructor() {
     super();
 
-    this._complete = 0;
     const shadowRoot = this.attachShadow({mode: 'open'});
 
     shadowRoot.innerHTML = `
@@ -15,7 +14,8 @@ class MightyToaster extends HTMLElement {
                 visibility: hidden; 
                 min-width: 250px; 
                 margin-left: -125px; 
-                background-color: #333; 
+                border-radius: 3px;
+                background-color: #FF00FF; 
                 font-family: 'Helvetica Neue';
                 color: #fff; 
                 text-align: center; 
@@ -51,15 +51,21 @@ class MightyToaster extends HTMLElement {
                     to {top: 0; opacity: 0;}
                 }
             </style>
-            <slot></slot>
-            <div id="mighty-toast">Some text some message..</div>
+            <div id="mighty-toast"></div>
         `;
+
+    this.toast = this.shadowRoot.querySelector('#mighty-toast');
+
   }
 
   connectedCallback() {
-    const toast = this.shadowRoot.querySelector('#mighty-toast');
-    toast.className = "show";
-    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    if (this.hasAttribute('text')) {
+       const text = this.attributes.getNamedItem('text').value;
+       this.toast.innerHTML = text;
+    }
+
+    this.toast.className = "show";
+    setTimeout(() => { this.toast.className = this.toast.className.replace("show", ""); }, 3000);
   }
 
 }
