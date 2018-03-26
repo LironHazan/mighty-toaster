@@ -1,30 +1,28 @@
 /**
  * Created by liron on 27/02/2018.
  */
-class MightyToaster extends HTMLElement {
+export class MightyToaster extends HTMLElement {
 
   constructor() {
-    super();
+      super();
 
-    const shadowRoot = this.attachShadow({mode: 'open'});
+      const shadowRoot = this.attachShadow({mode: 'open'});
 
-    shadowRoot.innerHTML = `
+      shadowRoot.innerHTML = `
             <style>
                #mighty-toast {
                 visibility: hidden; 
                 min-width: 250px; 
-                margin-left: -125px; 
                 border-radius: 3px;
                 background-color: #FF00FF; 
-                font-family: 'Helvetica Neue';
-                color: #fff; 
+                font-family: 'Bowlby One', cursive;
+                font-weight: 300;
                 text-align: center; 
-                border-radius: 2px; 
                 padding: 16px;
                 position: fixed;
                 z-index: 1;
                 left: 50%;
-                top: 30px;
+                top: 5rem;
                 }
                #mighty-toast.show {
                 visibility: visible;
@@ -54,23 +52,34 @@ class MightyToaster extends HTMLElement {
             <div id="mighty-toast"></div>
         `;
 
-    this.toast = this.shadowRoot.querySelector('#mighty-toast');
+      this.toast = this.shadowRoot.querySelector('#mighty-toast');
 
-  }
-
-  connectedCallback() {
-    if (!this.hasAttribute('text')) {
-      console.error('please supply a text attribute with proper message');
-      return;
     }
 
-    const text = this.attributes.getNamedItem('text').value.trim();
-    const message = text.length > 0 ? text : 'Default Text!'
-    this.toast.innerHTML = message;
-    this.toast.className = "show";
-    setTimeout(() => { this.toast.className = this.toast.className.replace("show", ""); }, 3000);
+    connectedCallback() {
+      this.toast.className = "show";
+      setTimeout(() => { this.toast.className = this.toast.className.replace("show", ""); }, 3000);
+    }
+
+  get text() {
+    return this.getAttribute('text');
   }
 
-}
-window.customElements.define('mighty-toaster', MightyToaster);
+  set text(value) {
+    this.toast.innerHTML = value;
+    this.setAttribute('text', value);
+  }
 
+  get color() {
+    return this.getAttribute('color');
+  }
+
+  set color(value) {
+    this.toast.style.backgroundColor = value;
+    this.setAttribute('color', value);
+  }
+
+  }
+MightyToaster.observedAttributes = [ 'text'];
+
+window.customElements.define('mighty-toast', MightyToaster);
